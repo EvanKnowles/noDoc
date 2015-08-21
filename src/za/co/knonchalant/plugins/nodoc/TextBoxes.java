@@ -62,11 +62,17 @@ public class TextBoxes extends AnAction {
 
         Runnable runnable = new Runnable() {
             public void run() {
+                PsiClass clazz = null;
+
                 for (List<CommentItem> list : comments) {
                     for (CommentItem commentItem : list) {
                         PsiComment commentFromText = factory.createCommentFromText(commentItem.getComment(), commentItem.getMethod());
+                        clazz = commentItem.getClazz();
                         commentItem.getClazz().addBefore(commentFromText, commentItem.getMethod());
                     }
+                }
+                if (clazz != null) {
+                  CodeStyleManager.getInstance(project).reformat(clazz);
                 }
             }
         };
